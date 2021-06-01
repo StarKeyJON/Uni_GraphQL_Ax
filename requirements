@@ -1,2 +1,10 @@
 axios
 ObjectsToCsv
+os
+numpy
+pandas
+shutil
+csv
+SLQAlchemy
+PyMySQL
+mysql
