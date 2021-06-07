@@ -1,10 +1,7 @@
 axios
 ObjectsToCsv
 os
-numpy
 pandas
 shutil
 csv
 SQLAlchemy
-PyMySQL
-mysql
