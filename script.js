@@ -1,45 +1,50 @@
 const axios = require('axios')
-const ObjectsToCsv = require('objects-to-csv')
+const ObjectsToCsv = require('objects-to-csv');
+const { sources } = require("./source.js");
+  
+const keys = Object.keys(sources);
+const values = Object.values(sources);
 
-const main = async () => {
-    try {
-    const result = await axios.post(
-        'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2', 
-        {
-            query: `
-            {
-                swaps {
-                  timestamp
-                  pair {
-                    token0 {
-                        name
-                    }
-                    token1 {
-                        name
-                    }
-                  }
-                  sender
-                  amount0In
-                  amount1In
-                  amount0Out
-                  amount1Out
-                  to
-                  amountUSD
-                }
-              }
-            `
-        }  
-    );
+keys.forEach(function (keys) {
+values.forEach(function(values) {
+  const MAIN = async () => {
+  try {
     
-const csv = new ObjectsToCsv(result.data.data.swaps);
+  const result = await axios.post(
+      values, 
+      {
+          query: `
+          {
+              swaps {
+                timestamp
+                pair {
+                  token0 {
+                      name
+                  }
+                  token1 {
+                      name
+                  }
+                }
+                sender
+                amount0In
+                amount1In
+                amount0Out
+                amount1Out
+                to
+                amountUSD
+              }
+            }
+          `
+      } 
+    )
+    const csv = new ObjectsToCsv(result.data.data.swaps)
 
-await csv.toDisk('./uni.csv');
+    await csv.toDisk(`/datasets/${keys}.csv`)
 
-//console.log(result.data.data.swaps);
-
-} catch(error) {
-    console.log(error);
-}
-
-}
-main();
+       
+    } catch(error) {
+      console.log(error);
+    }
+  };
+  MAIN();
+})});
