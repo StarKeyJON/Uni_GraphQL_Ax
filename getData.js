@@ -20,7 +20,7 @@ values.forEach(function(values) {
         //some graph schemas are structured differently as well
           query: `
           {
-              swaps {
+              swaps(orderBy: timestamp, orderDirection: desc){
                 timestamp
                 pair {
                   token0 {
