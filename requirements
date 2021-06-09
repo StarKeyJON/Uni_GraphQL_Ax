@@ -1,7 +1,4 @@
 axios
 ObjectsToCsv
-os
 pandas
-shutil
-csv
 SQLAlchemy
