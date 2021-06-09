@@ -2,11 +2,11 @@
 Live swaps scraper that creates csv files and uploads into sql database.
 
 This is currently a hard coded configuration,
-you need to have the latest version of node.js and python installed.
+you need to have the latest version of node.js and python installed, it is using My SQL database.
 
 Create a new folder on your desktop and transfer all the files into the new folders.
 
-Open the configuration file and enter in your SQL info, save the file.
+Open the configuration file and enter in your MySQL info, save the file.
 
 Open up the command line and cd (change directory) to the newly created project folder that contains the files.
 
