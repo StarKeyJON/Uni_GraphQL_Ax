@@ -1,4 +1,4 @@
-const defaultSchema = (
+const mainSchema = (
 `
 {
     swaps(orderBy: timestamp, orderDirection: desc){
@@ -20,7 +20,7 @@ const defaultSchema = (
       amountUSD
     }
   }
-`);
+  `
+);
 
-
-module.exports = { defaultSchema };
+module.exports = { mainSchema };
