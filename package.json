@@ -17,5 +17,9 @@
     "objects-to-csv": "^1.3.6",
     "pandas": "0.0.3"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StarKeyJON"
+  }
 }
