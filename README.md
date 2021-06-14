@@ -13,7 +13,7 @@ Run the python script to initiate the automated program, by typing "python3 prog
 
 This will initiate the program. The majority of the operations are done by time_check.py as it creates new directories and queries the current time stamps in batches of (50), and then compares the first, middle and last for changes. If time changes are noticed, then the full swap data is queried, prepared and stored in the SQL database.
 
-After a few runs, batches of (50) seemed like an adequate comparison, as the csv reports are only in batches of (100), and afterd monitoring of the database, the uploaded swaps overlap seem to be reduced to a minimal.
+After a few runs, batches of (50) seemed like an adequate comparison, as the csv reports are only in batches of (100), and after monitoring of the database, the uploaded swaps overlap seem to be reduced to a minimal.
 
 If you need to quit the program, press ctrl+c.
 If there are errors upon running it again after an abrupt halt, 
