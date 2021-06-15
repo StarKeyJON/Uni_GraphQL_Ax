@@ -103,32 +103,30 @@ def check_time():
                 if file.endswith('timestamp.csv'):
                     new_time.append(file)
 
-                # setting the variables for comparison
-                a = get_csv_data('./newtimesets' + '/' + file, 0, 1)
-                b = get_csv_data('./oldtimesets' + '/' + file, 0, 1)
-                c = get_csv_data('./newtimesets' + '/' + file, 21, 1)
-                d = get_csv_data('./oldtimesets' + '/' + file, 21, 1)
-                e = get_csv_data('./newtimesets' + '/' + file, 49, 1)
-                f = get_csv_data('./oldtimesets' + '/' + file, 49, 1)
-
-                print(' DEX=> ' + file)
-                print(' ' * 4 + get_csv_data('./newtimesets' + '/' + file, 0, 1) + ' index: 0 --> new time')
-                print(' ' * 2, '*' * 12, ' ' * 2)
-                print(' ' * 4 + get_csv_data('./oldtimesets' + '/' + file, 0, 1) + ' index: 0 --> old time')
-                print('_' * 20)
-                print(' DEX=> ' + file)
-                print(' ' * 4 + get_csv_data('./newtimesets' + '/' + file, 21, 1) + ' index: 21 --> new time')
-                print(' ' * 2, '*' * 12, ' ' * 2)
-                print(' ' * 4 + get_csv_data('./oldtimesets' + '/' + file, 21, 1) + ' index: 21 --> old time')
-
-                # compare the new timesets against the old time_sets,
+                # compare the new ids against the old time_sets,
                 # append graph query list with inconsistencies for next batch of queries
-                if a != b and e != f:
-                    graph.append(file)
+                num_swap = 0
+                for i in range(50):
+                    a = get_csv_data('./newtimesets' + '/' + file, i, 1)
+                    b = get_csv_data('./oldtimesets' + '/' + file, i, 1)
+                    if a != b:
+                        num_swap += 1
+                        if file not in graph:
+                            graph.append(file)
 
+                print(' DEX=> ' + file)
+                for j in range(7):
+                    j += 1
+                    print(' ' * 4 + get_csv_data('./newtimesets' + '/' + file, j, 1) + ' index: '+str(j)+' --> new id')
+                print(' ' * 2, '*' * 12, ' ' * 2)
+                for i in range(7):
+                    i += 1
+                    print(' ' * 4 + get_csv_data('./oldtimesets' + '/' + file, i, 1) + ' index: '+str(i)+' --> old id')
+                print('_' * 20)
+                
             # formatting the graph list for js queries
             graph = [
-                "'UNI1'" + ':' + "'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'" if i == 'UNI1timestamp.csv' else i
+                "'UNIv2'" + ':' + "'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'" if i == 'UNI1timestamp.csv' else i
                 for i in graph]
             graph = [
                 "'MDEX'" + ':' + "'https://api.thegraph.com/subgraphs/name/wetitpig-cross-chain/mdex-bsc'" if i == 'MDEXtimestamp.csv' else i
@@ -184,7 +182,7 @@ def check_time():
 
                     # write the newly created query to js file
                     # passing the slate the first time prevents errors of appending existing data
-                    # that may have been left from a shutdown and sending a false schema
+                        # that may have been left from a shutdown and sending a false schema
                     with open('./time_slate.js', 'w') as file:
                         pass
                     with open('./time_slate.js', 'r+') as file:
@@ -192,14 +190,43 @@ def check_time():
                         for k in sources:
                             file.write(k + ', \n')
                         file.write('};\n' + 'module.exports = { sources };')
+                    with open('./new_query.js', 'w') as file:
+                        pass
+                    
+                    # write the function to generate a specfic schema to query using numswap variable as amount of swaps
+                    try:
+                        with open('./new_query.js', 'r+') as file:
+                            file.write("const axios = require('axios');\nconst ObjectsToCsv = require('objects-to-csv');"+
+                            "\nconst { sources } = require('./time_slate.js');\nconst fs = require('fs');"+
+                            "\n\nfunction GATHER() {\n  Object.entries(sources).forEach(([key, value]) => {\n    MAIN = async () => {"+
+                            "\n      try {\n      const result = await axios.post(\n         value,\n          {\n              query: `"+
+                            "\n              {\n                swaps(first: " + str(num_swap) + ", orderBy: timestamp, orderDirection: desc){\n                      timestamp"+
+                            "\n                pair {\n                  token0 {\n                      name\n                  }\n                }\n                sender"+
+                            "\n                amount0In\n                amount1In\n                amount0Out\n                amount1Out\n                to\n                amountUSD"+
+                            "\n                }\n              }\n              `\n          }\n        )"+
+                            "\n        const csv = new ObjectsToCsv(result.data.data.swaps)\n        console.log('Successfully uploaded custom schema query of recent swap logs')\n        await csv.toDisk(`./${" + "key" + "}.csv`)\n"+
+                            "\n        } catch (err) {\n          console.log(err);\n        }\n      };\n    MAIN();\n  })}\nGATHER();\n")
+                    except Exception:
+                        print('Error: Rewrite the js code')
+                        sys.exit()
 
                     # execute the newly formed query
                     print('Executing newly formed schema...')
-                    check_output(['node', './postData.js'])
+                    try:
+                        check_output(['node', './new_query.js'])
+                    except Exception:
+                        print('Error executing custom query' + Exception)
+                        sys.exit
 
-                    # delete query slate
+                    time.sleep(2)
+
+                    # clear time slate
                     with open('./time_slate.js', 'w') as file:
                         pass
+
+                    # # delete query slate
+                    # with open('./new_query.js', 'w') as file:
+                    #     pass
 
                     # store the newly gathered data
                     print('storing the gathered data')
@@ -209,6 +236,8 @@ def check_time():
                     check_time()
                 except:
                     print('error storing modified list')
+                    sys.exit()
 
 
 check_time()
+
