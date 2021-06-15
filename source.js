@@ -1,4 +1,4 @@
-const sources={'UNI1':'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',
+const sources={'UNIV2':'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',
 'MDEX':'https://api.thegraph.com/subgraphs/name/wetitpig-cross-chain/mdex-bsc',
 'PANCAKE':'https://api.thegraph.com/subgraphs/name/depayfi/pancake-v2-exchange',
 'SUSHI':'https://api.thegraph.com/subgraphs/name/sushiswap/exchange',
