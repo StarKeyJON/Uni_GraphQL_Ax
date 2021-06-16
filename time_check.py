@@ -126,7 +126,7 @@ def check_time():
                 
             # formatting the graph list for js queries
             graph = [
-                "'UNIv2'" + ':' + "'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'" if i == 'UNI1timestamp.csv' else i
+                "'UNIv2'" + ':' + "'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'" if i == 'UNIv2timestamp.csv' else i
                 for i in graph]
             graph = [
                 "'MDEX'" + ':' + "'https://api.thegraph.com/subgraphs/name/wetitpig-cross-chain/mdex-bsc'" if i == 'MDEXtimestamp.csv' else i
