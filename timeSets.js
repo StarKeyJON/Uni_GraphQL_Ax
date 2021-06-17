@@ -14,7 +14,7 @@ function TIMESTAMP() {
           {
               query: `
               {
-                swaps (first: 100, orderBy: timestamp orderDirection: desc){
+                swaps (first: 400, orderBy: timestamp orderDirection: desc){
                   transaction{
                     id
                   }
