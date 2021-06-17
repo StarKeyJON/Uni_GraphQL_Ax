@@ -4,6 +4,7 @@ import os.path
 import time
 
 
+
 def get_credentials():
     print('''
         Hello, please enter your MySQL database configurations 
@@ -27,24 +28,23 @@ def get_credentials():
         file.write('\n}')
     print('')
     print("Thank you!\nPreparing the data collection program for initiation.\nEnjoy!")
-    time.sleep(1)
+    time.sleep(2)
+    
     import time_check
     time_check.check_time()
 
 
 # Check if a databaseconfig file exists and run program if so, if not get_credentials
 def initiate_program():
+
     file_name = "databaseconfig.py"
-    cur_dir = os.getcwd()
+    file_list = os.listdir(os.getcwd())
 
-    while True:
-        file_list = os.listdir(cur_dir)
-
-        if file_name in file_list:
-            import time_check
-            time_check.check_time()
-        else:
-            get_credentials()
-
+    if file_name in file_list:
+        
+        import time_check
+        time_check.check_time()
+    else:
+        get_credentials()
 
 initiate_program()
