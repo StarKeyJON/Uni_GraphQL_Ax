@@ -1,4 +1,4 @@
-import os, shutil, csv, pandas as pd, sqlalchemy as sq
+import os, shutil, pandas as pd, sqlalchemy as sq
 import databaseconfig as cfg
 # import time
 from subprocess import check_output
@@ -44,7 +44,8 @@ def store_data():
             df[file] = pd.read_csv(data_path + file, encoding="ISO-8859-1")
         print(file)
 
-    # Clean table names
+        # Clean table names
+    
     for k in csv_files:
         dataframe = df[k]
         clean_tbl_name = k.lower().replace(" ", "_").replace("?", "") \
@@ -74,39 +75,25 @@ def store_data():
 
         dataframe['timestamp'] = pd.to_datetime(dataframe['timestamp'], unit='s')
 
+
         # Upload cleaned and prepared dataframes to SQL database
-        for file in csv_files:
-            try:
-                # Using sqlalchemy to make the db connection
-                # User, pw, and db are being imported from databaseconfig file to mask credentials
-                con = sq.create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}"
-                                       .format(user=cfg.mysql["user"], pw=cfg.mysql["passwd"], db=cfg.mysql["db"]))
-                frame = tbl_name
-                # Insert the dataframe into the MySQL database table 'acct_activity'
-                # use if_exists argument to 'replace' if you want to drop the table and replace
-                # use if_exists argument to 'append' if you want to append new data to existing data
-                dataframe.to_sql(frame, con, if_exists='append')
-                filecount = len(csv_files)
-                filecount = format(filecount)
-                db = format(cfg.mysql["db"])
-                print(' ' * 2, '$' * 12, ' ' * 2)
-                print("Succesfuly uploaded " + file + " to " + db)
-                print(' ' * 2, '$' * 12, ' ' * 2)
-                try:
-                    os.remove(data_path + '/' + file)
-                    print("SUCCESS: Removed " + (data_path + file))
-                except Exception:
-                    break
-            except Exception:
-                print('!' * 20)
-                print('''
-                Error: Check that your SQL database credentials are accurate.
-                Please enter the correct credentials.
-                ''')
-                print('-' * 20)
-                import program
-                program.get_credentials()
-                break
-
-
+        
+        # Using sqlalchemy to make the db connection
+        # User, pw, and db are being imported from databaseconfig file
+        engine = sq.create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}"
+                           .format(user=cfg.mysql["user"], pw=cfg.mysql["passwd"], db=cfg.mysql["db"]))
+        con = engine.connect()
+        frame = tbl_name
+        # use if_exists argument to 'append' if you want to append new data to existing data
+        dataframe.to_sql(frame,engine, if_exists='append')
+        db = format(cfg.mysql["db"])
+        print(' ' * 2, '$' * 12, ' ' * 2)
+        print("Succesfuly uploaded " + file + " to " + db)                
+        print(' ' * 2, '$' * 12, ' ' * 2)
+        try:
+            os.remove(data_path + '/' + file)
+        except:
+            pass
+        print("SUCCESS: Removed " + (data_path + file))
+        con.close()
 store_data()
