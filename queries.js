@@ -1,7 +1,7 @@
 const mainSchema = (
 `
 {
-    swaps(orderBy: timestamp, orderDirection: desc){
+    swaps(first: 100, orderBy: timestamp, orderDirection: desc){
       timestamp
       pair {
         token0 {
