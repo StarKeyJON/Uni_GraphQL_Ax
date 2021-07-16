@@ -1,4 +1,10 @@
 # Uni_GraphQL_Ax
+
+I was approached on Telegram by an anonymous individual to build them a program that queries for live swap events and then saves them to a database. They requested it to be without any api keys, so I decided to use TheGraph.
+This was my first attempt at building such a program, and I would probably just write it all in python next time.
+
+I built the codebase and managed a remote Linux server for them to store the data.
+
 Live swaps scraper that creates csv files and uploads into sql database.
 
 You will need to have the latest version of node.js and python installed, also it is using My SQL database.
